@@ -7,8 +7,8 @@ class GetAllDealsService {
         const deals: DealsPipedrive[] = [];
         try {
             const urlBase = process.env.ENDPOINT_PIPEDRIVE;
-            const apiKey = process.env.ENDPOINT_PIPEDRIVE;
-            const response = await axios.get(`${urlBase}/deals?status=won&api_token=${apiKey}`);
+            const apiKey = process.env.APP_SECRET_PIPEDRIVE;
+            const {data: response} = await axios.get(`${urlBase}/deals?status=won&api_token=${apiKey}`);
 
             if (response && response.data) {
                 for (let item of response.data) {
