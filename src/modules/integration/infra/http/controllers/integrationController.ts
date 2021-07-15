@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import GetAllDealsService from '@modules/pipedrive/services/GetAllDealsService';
 import PostOrderService from '@modules/bling/service/PostOrderService';
 import MyMongo from '@shared/services/MyMongo';
-import SaveOrderService from '@modules/order/services/SaveOrderService';
+import SaveOrdersService from '@modules/order/services/SaveOrdersService';
 import Order from '@modules/order/entities/Order';
 
 export default class IntegrationController {
@@ -13,7 +13,7 @@ export default class IntegrationController {
 
     const pipedriveService = new GetAllDealsService();
     const postOrderService = new PostOrderService();
-    const saveOrderService = new SaveOrderService();
+    const saveOrdersService = new SaveOrdersService();
     const myMongo = new MyMongo();    
 
     const deals = await pipedriveService.execute();
@@ -45,8 +45,10 @@ export default class IntegrationController {
         
     const client = await myMongo.openClient();
     
-    saveOrderService.execute(client, orders);
+    await saveOrdersService.execute(client, orders);  
+    
+    await client.close();
 
-    return response.json(orders);
+    return response.status(201).json(orders);
   }
 }
